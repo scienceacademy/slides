@@ -1,38 +1,10 @@
 Meeting ID: 968 2612 4262
 Passcode: 083094
 
-# repo token
-a8d550aad48e79d21b29b0fc9549d4b432873b1c
-----
 
 
-# generate key pairs
-openssl genrsa -des3 -out private.pem 4096
-openssl rsa -in private.pem -pubout -out public.pem
-# sign
-openssl dgst -sign private.pem -out test.c.sign test.c
-# verify
-openssl dgst -verify public.pem -signature test.c.sign test.c
-
-## 8th
-
-Post calculation example
-
-
-Physics
-
-## 7th
-* Intro to flask
-    * application.py
-    * pages, inserting values (random)
-    * request parameters (name)
-    * templates
 
 # 8th
-* Arduino cont'd
-    * 7 segment - explain bitmasks, use
-    * Homework assignment
-
 
 ---
 
@@ -46,40 +18,21 @@ Physics
 ---
 
 
-"♥", "♣", "♠", "♦"
-card = {"rank": 5, "suit": "♣"}
-deck = [{"rank": 5}, "suit": 0}, {"rank": 11, "suit": 3}]
-
-class Card:
-    pass
-
-c = Card()
-c.rank = "King"
-c.suit = "Hearts"
-
-
-## APCSP
-peer-grade
-next unit after web
-daily vids?
-
 -----------------------------
 
 # INTERVENTIONS
 
 #7
-Min
-Russel-isaacs
+- Kim, Terrius, p/s
+- Colligan, Apollo, s
+- Lee, Jayden, s
+- Russel-Isaacs, p
+- Story, p/s
+- Casillas
+- Vaysberg
+- Paek
 
-xx Kashani - mom replied
-x Casillas
-xx Ramirez - spoke 3/9 4pm, come for more help (recent death in family)
-x Yawakim
-Lee, Edward
-x Story - dad, encourage ofc hrs
-x Vaysberg
-xx Gracie - almost 3 weeks - mom & dad, depression, will try
-
+#8
 
 Parent conf
 ----------
@@ -92,26 +45,130 @@ xAltamirano - after 4pm
 
 
 -------
-from flask import Flask, session, render_template, redirect, request
+Classroom
 
-app = Flask(__name__)
-app.secret_key = "foo"
+- sort through student projects
+- organize workbench
+- greenscreen
+    - lights
+    - camera
+- posters/deco
 
-@app.route("/")
-def index():
-    if "username" in session:
-        return render_template("index.html", name=session["username"])
-    else:
-        return "not logged in"
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        session["username"] = request.form["username"]
-        return redirect("/")
-    return render_template("login.html")
 
-@app.route("/logout")
-def logout():
-    session.pop("username")
-    return redirect("/login")
+---
+array of ranks [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+count ranks in hand
+how many non-zero values?
+    2:
+        is either 4? 4 of a kind
+        else full house
+    3:
+        a 3? 3 of a kind
+        else 2 pair
+    4:
+        pair
+    5:
+        is flush?
+        is straight?
+
+also great (quick) for comparing hands
+
+-----
+pip install pycryptodome
+#### CREATE KEYS (EXAMPLE) #####################
+```python
+from Crypto.PublicKey import RSA
+
+key_pair = RSA.generate(2048)
+# priv = key_pair.export_key()
+# pub = key_pair.publickey().export_key()
+
+print("p =", key_pair.p)
+print("q =", key_pair.q)
+print("-"*10)
+print("m =", key_pair.n)
+print("-"*10)
+print("d =", key_pair.d)
+print("-"*10)
+print("e =", key_pair.e)
+```
+
+#### ENCRYPT ####################################
+```python
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+import base64
+
+keyfile = input("Public key: ")
+
+with open(keyfile, "r") as f:
+    data = f.read()
+pub = RSA.import_key(data)
+
+cleartext = input("Message: ").encode()
+cipher = PKCS1_OAEP.new(pub)
+ciphertext = cipher.encrypt(cleartext)
+print("Ciphertext:")
+print(base64.b64encode(ciphertext).decode())
+```
+
+#### DECRYPT ###################################
+```python
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+import base64
+
+with open("private.key", "r") as file:
+    data = file.read()
+priv = RSA.import_key(data)
+
+ciphertext = input("Message: ").encode()
+ciphertext = base64.b64decode(ciphertext)
+cipher = PKCS1_OAEP.new(priv)
+cleartext = cipher.decrypt(ciphertext)
+print("Cleartext:")
+print(cleartext.decode())
+```
+
+#### SIGN ###########################
+```python
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pss
+from Crypto.Hash import SHA256
+import base64
+
+def sign():
+    with open("private.key", "r") as file:
+        data = file.read()
+    private_key = RSA.import_key(data)
+    msg = input("Message: ").encode()
+    hashed = SHA256.new(msg)
+    signature = pss.new(private_key).sign(hashed)
+    with open("output.txt", "w") as output:
+        output.write(msg.decode())
+        output.write("\n--\n")
+        output.write(base64.b64encode(signature).decode())
+    # print(base64.b64encode(signature).decode())
+
+def verify():
+    keyfile = input("Public key file: ")
+    with open(keyfile, "r") as f:
+        data = f.read()
+    public_key = RSA.import_key(data)
+    msg = input("Message: ").encode()
+    signature = input("Signature: ").encode()
+    signature = base64.b64decode(signature)
+    hashed = SHA256.new(msg)
+    try:
+        pss.new(public_key).verify(hashed, signature)
+        print("Verified")
+    except:
+        print("Verification failed")
+
+choice = input("(S)ign or (V)erify: ").lower()
+if choice == "s":
+    sign()
+elif choice == "v":
+    verify()
+```
