@@ -2,8 +2,6 @@ Meeting ID: 968 2612 4262
 Passcode: 083094
 
 
-
-
 # 8th
 
 ---
@@ -16,6 +14,18 @@ Passcode: 083094
 * Cryptocurrency proponents say the energy costs are justified by the benefits in economic freedom. Do you agree or disagree?
 
 ---
+# 8th
+failed:
+    jkim0205.key
+
+# 7th
+No key:
+    abao
+failed:
+    emorrow
+    jhalko
+    rlee0096
+    mpae
 
 
 -----------------------------
@@ -32,27 +42,7 @@ Passcode: 083094
 - Vaysberg
 - Paek
 
-#8
 
-Parent conf
-----------
-xMejia
-    mom
-xChrisman
-    dad
-xAltamirano - after 4pm
-    mom
-
-
--------
-Classroom
-
-- sort through student projects
-- organize workbench
-- greenscreen
-    - lights
-    - camera
-- posters/deco
 
 
 
@@ -74,25 +64,7 @@ how many non-zero values?
 
 also great (quick) for comparing hands
 
------
-pip install pycryptodome
-#### CREATE KEYS (EXAMPLE) #####################
-```python
-from Crypto.PublicKey import RSA
-
-key_pair = RSA.generate(2048)
-# priv = key_pair.export_key()
-# pub = key_pair.publickey().export_key()
-
-print("p =", key_pair.p)
-print("q =", key_pair.q)
-print("-"*10)
-print("m =", key_pair.n)
-print("-"*10)
-print("d =", key_pair.d)
-print("-"*10)
-print("e =", key_pair.e)
-```
+----
 
 #### ENCRYPT ####################################
 ```python
@@ -131,44 +103,47 @@ print("Cleartext:")
 print(cleartext.decode())
 ```
 
-#### SIGN ###########################
-```python
-from Crypto.PublicKey import RSA
-from Crypto.Signature import pss
-from Crypto.Hash import SHA256
-import base64
 
-def sign():
-    with open("private.key", "r") as file:
-        data = file.read()
-    private_key = RSA.import_key(data)
-    msg = input("Message: ").encode()
-    hashed = SHA256.new(msg)
-    signature = pss.new(private_key).sign(hashed)
-    with open("output.txt", "w") as output:
-        output.write(msg.decode())
-        output.write("\n--\n")
-        output.write(base64.b64encode(signature).decode())
-    # print(base64.b64encode(signature).decode())
+----------------------------------------------------------
+*I - LEDs
+N - 3d prints?
+N - pens/rulers/drafting
+*O - orrery - add motor
+*V - motors?
+A - tools (more)
+T - circuit boards
+I - Lego? 3Dp Rocket? LED Matrix?
+*O - infinity mirror
+*N - motors
 
-def verify():
-    keyfile = input("Public key file: ")
-    with open(keyfile, "r") as f:
-        data = f.read()
-    public_key = RSA.import_key(data)
-    msg = input("Message: ").encode()
-    signature = input("Signature: ").encode()
-    signature = base64.b64decode(signature)
-    hashed = SHA256.new(msg)
-    try:
-        pss.new(public_key).verify(hashed, signature)
-        print("Verified")
-    except:
-        print("Verification failed")
+2x4s for mounting
+    - sections (2-3?)
+Wall anchors
+Power supply/wiring
+    - 5v power bus
 
-choice = input("(S)ign or (V)erify: ").lower()
-if choice == "s":
-    sign()
-elif choice == "v":
-    verify()
-```
+-------
+Classroom
+
+- sort through student projects
+- organize workbench
+- greenscreen
+    - lights
+    - camera
+- posters/deco
+- Wall lego plates + bin
+
+Projects
+- LED grid
+- kame robot
+- Innovation sign
+
+
+Donations list:
+----------------
+Electronics - printers, dvd/cd players
+Lego (esp. Technics)
+Tools
+
+
+
